@@ -18,3 +18,7 @@ This file will work as a log which will summarize team meetings
     - small molecules: destabilization of complex, work with Mg+2 (Ca+2, Mn+2), work with knot and AdoMet interaction,
     - proteins: destabilization of complex, mechanical block, PTM, work with C-terminal where tRNA binds (and is similar to Trp repressor),
 
+- [ ] Settle on which approach to take or at least rank them
+- [ ] Get relevant literature to present on Monday meeting (e.g. which supports our approach)
+- [ ] All of us should take a look at the diagram (suggest corrections)
+- [ ] As a first step gather databases to use in our workflow
