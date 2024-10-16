@@ -13,6 +13,7 @@ This file will work as a log which will summarize team meetings
 - [ ] How TrmD works + Mechanisms that we want to use
 - [ ] Locate binding sites by p2rank
 - [ ] Analysis of conformational changes in AHoJ-DB
+- [ ] Protein-ligand corrections (SQM + ML → the best (PM6-ML))
 - [ ] Approaches:
     - small molecules: destabilization of complex, work with Mg+2 (Ca+2, Mn+2), work with knot and AdoMet interaction,
     - proteins: destabilization of complex, mechanical block, PTM, work with C-terminal where tRNA binds (and is similar to Trp repressor),
