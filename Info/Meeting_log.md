@@ -6,6 +6,13 @@ This file will work as a log which will summarize team meetings
 - Midterm presentation 13.12.2024 10AM
 - Deadline 2: 24.12.2024
 
+## Meet 2 (1.11.2024)
+- tasks were asigned to each team member:
+    - Anna and Aneta - learn how to do target refinement via command line (possibly pyMol through python, removing waters, adding protonation.. preparing structures for further analysis), MSA of known target proteins and their variations 
+    - Marek - classical virtual screening based on molecules from known databases
+    - Tomáš - learn how to operate with ChEMBL and fetch approved molecules or, generally, our molecules of interest
+    - Tom - virtual screening using generative approaches
+
 ## MeetEU (21.10.2024)
 - Tomáš was assigned to read Evaluating druggability..
 - Marián added Evolutionary repair, Development of inhibitors against Mycobacterium, Prospects of Indole, Unraveling allostery, Mg2+-dependent methyl transfer
