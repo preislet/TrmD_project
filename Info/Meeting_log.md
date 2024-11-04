@@ -6,7 +6,14 @@ This file will work as a log which will summarize team meetings
 - Midterm presentation 13.12.2024 10AM
 - Deadline 2: 24.12.2024
 
-## Meet 2 (1.11.2024)
+## MeetEU (4.11.2024)
+- crystal structures were presented
+- we should compare images of ligand inner-interactions of resolved crystal structures from PDBsum
+- Tom has shown that the AdoMet pocket is very rigid (in dimers as well as in monomers - we are not sure if monomers weren't just extracted from dimeric crystal structure)
+- we agreed on docking into structure 4YVG which has the best resolution and is monomeric (if we would have wanted to dock into dimeric structure then AlphaFold would render useful and relevant)
+- it is not completely out of question to dock into second pocket (tRNA binding site of dimeric structure)
+
+## Team-meet 2 (1.11.2024)
 - tasks were asigned to each team member:
     - Anna and Aneta - learn how to do target refinement via command line (possibly pyMol through python, removing waters, adding protonation.. preparing structures for further analysis), MSA of known target proteins and their variations 
     - Marek - classical virtual screening based on molecules from known databases
@@ -28,12 +35,12 @@ This file will work as a log which will summarize team meetings
     - we need to find out why was the mutation imposed
 - We discussed a problem with big molecules in oficially-approved-drugs dataset
 
-## Meet 1 (16.10.2024)
+## Team-meet 1 (16.10.2024)
 - [x] Random state: 42
 - [ ] Keep documentation and comments on point
-- [ ] Create workflow diagram
+- [x] Create workflow diagram
 - [ ] How TrmD works + Mechanisms that we want to use
-- [ ] Locate binding sites by p2rank
+- [x] Locate binding sites by p2rank
 - [ ] Analysis of conformational changes in AHoJ-DB
 - [ ] Protein-ligand corrections (SQM + ML → the best (PM6-ML))
 - [ ] Approaches:
@@ -41,6 +48,6 @@ This file will work as a log which will summarize team meetings
     - proteins: destabilization of complex, mechanical block, PTM, work with C-terminal where tRNA binds (and is similar to Trp repressor),
 
 - [ ] Settle on which approach to take or at least rank them
-- [ ] Get relevant literature to present on Monday meeting (e.g. which supports our approach)
-- [ ] All of us should take a look at the diagram (suggest corrections)
-- [ ] As a first step gather databases to use in our workflow
+- [x] Get relevant literature to present on Monday meeting (e.g. which supports our approach)
+- [x] All of us should take a look at the diagram (suggest corrections)
+- [x] As a first step gather databases to use in our workflow
