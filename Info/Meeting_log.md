@@ -6,6 +6,16 @@ This file will work as a log which will summarize team meetings
 - Midterm presentation 13.12.2024 10AM
 - Deadline 2: 24.12.2024
 
+## MeetEU (11.11.2024)
+- Marian told us about a study which highlights the biological importance of methylations - after the knockout of methyl transferase gene, another protein replaced its function
+- Tom was assigned to have a presentation on different molecular docking techniques (algorithms)
+- we should find homologous sequences (with differet sequence identity in the binding sites) - however, these proteins should still be related to methylation
+- the teams should agree to take different approaches (AdoMet or tRNA binding site)
+
+## MeetEU (6.11.2024)
+- knocking out or mutating the gene of TrmD or inhibiting the targets was met with no effect (study says)
+- two known small molecules suggested as good inhibitors (or they have great binding affinity at least)
+
 ## MeetEU (4.11.2024)
 - crystal structures were presented
 - we should compare images of ligand inner-interactions of resolved crystal structures from PDBsum
