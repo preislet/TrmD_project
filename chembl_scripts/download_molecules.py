@@ -8,7 +8,7 @@ from rdkit.Chem import AllChem
 
 # Argument parser setup
 parser = argparse.ArgumentParser(description="Quickly download molecules from ChEMBL with filtering and preprocessing.")
-parser.add_argument("--max_results", type=int, default=10, help="Maximum number of molecules to download.")
+parser.add_argument("--max_results", type=int, default=1000, help="Maximum number of molecules to download.")
 parser.add_argument("--output_format", type=str, default="sdf", choices=["sdf", "mol", "smiles"], help="Output format for molecule structures.")
 parser.add_argument("--processors", type=int, default=4, help="Number of processors to use for downloading.")
 parser.add_argument("--folder_name", type=str, default="molecule_structures", help="Base folder to save molecule files.")
