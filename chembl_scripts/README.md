@@ -1,6 +1,6 @@
 # ChEMBL Molecule Downloader
 
-This project provides a Python script for downloading molecules from the ChEMBL database with features such as filtering by approval phase (`max_phase`), preprocessing using RDKit, and organizing outputs into separate folders for original and preprocessed files.
+This project provides a Python script for downloading molecules from the ChEMBL database with features such as filtering by approval phase (`min_phase`), preprocessing using RDKit, and organizing outputs into separate folders for original and preprocessed files.
 
 ---
 
