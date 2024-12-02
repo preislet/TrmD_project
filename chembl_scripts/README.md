@@ -45,7 +45,7 @@ python3 download_molecules.py [OPTIONS]
 | `--output_format`| `str`   | `sdf`                | Format of the molecule files (`sdf`, `mol`, or `smiles`).    |
 | `--processors`   | `int`   | `4`                  | Number of threads to use for parallel downloads.             |
 | `--folder_name`  | `str`   | `molecule_structures`| Base folder to store downloaded and preprocessed files.     |
-| `--max_phase`    | `int`   | `4`                  | Maximum approval phase for filtering molecules.             |
+| `--min_phase`    | `int`   | `4`                  | Minimum approval phase for filtering molecules.             |
 | `--preprocess`   | `bool`  | `False`              | Enable preprocessing of molecules using RDKit.              |
 
 ## Folder Structure
