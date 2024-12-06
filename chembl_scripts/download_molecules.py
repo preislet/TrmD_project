@@ -12,7 +12,7 @@ parser.add_argument("--max_results", type=int, default=1000, help="Maximum numbe
 parser.add_argument("--output_format", type=str, default="sdf", choices=["sdf", "mol", "smiles"], help="Output format for molecule structures.")
 parser.add_argument("--processors", type=int, default=4, help="Number of processors to use for downloading.")
 parser.add_argument("--folder_name", type=str, default="molecule_structures", help="Base folder to save molecule files.")
-parser.add_argument("--min_phase", type=int, default=4, help="Minimum approval phase for filtering molecules (e.g., 4 for FDA-approved drugs).")
+parser.add_argument("--max_phase", type=int, default=4, help="Maximum approval phase for filtering molecules (e.g., 4 for FDA-approved drugs).")
 parser.add_argument("--preprocess", action="store_true", default=False, help="Preprocess molecules using RDKit.")
 
 def create_folders(base_folder: str) -> dict:
@@ -84,7 +84,7 @@ def fetch_and_download_molecules(args: argparse.Namespace) -> None:
         "format": "json",
         "limit": 100,
         "offset": 0,
-        "min_phase": args.min_phase
+        "min_phase": args.max_phase
     }
 
     folders: dict = create_folders(args.folder_name)
