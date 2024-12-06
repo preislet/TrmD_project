@@ -45,7 +45,7 @@ def preprocess_molecule(file_path: str, output_folder: str) -> None:
         Chem.MolToMolFile(mol, processed_path)
         print(f"Preprocessed and saved to: {processed_path}")
 
-def download_structure(chembl_id: str, folders: dict, output_format: str, preprocess: bool) -> None:
+def download_structure(chembl_id: str, folders: dict, output_format: str, preprocess: bool, retries:int = 3) -> None:
     """Downloads a molecule structure in the specified format.
 
     Args:
@@ -62,6 +62,21 @@ def download_structure(chembl_id: str, folders: dict, output_format: str, prepro
     if os.path.exists(file_path):
         print(f"Skipping already downloaded: {chembl_id}")
         return
+
+    for _ in range(retries):
+        response = requests.get(structure_url)
+        if response.status_code == 200:
+            with open(file_path, "wb") as file:
+                file.write(response.content)
+            print(f"Downloaded: {chembl_id}.{output_format}")
+            if preprocess and output_format in ["mol", "sdf"]:
+                preprocess_molecule(file_path, preprocessed_folder)
+            return
+        else:
+            print(f"Failed to download {chembl_id}. Status Code: {response.status_code}")
+            print(f"Retrying download for {chembl_id}...")
+
+    print(f"Failed to download {chembl_id} after {retries} retries.")
     
     response = requests.get(structure_url)
     if response.status_code == 200:
@@ -82,7 +97,7 @@ def fetch_and_download_molecules(args: argparse.Namespace) -> None:
     base_url: str = "https://www.ebi.ac.uk/chembl/api/data/molecule"
     params: dict = {
         "format": "json",
-        "limit": 100,
+        "limit": 500,
         "offset": 0,
         "min_phase": args.max_phase
     }
@@ -113,6 +128,7 @@ def fetch_and_download_molecules(args: argparse.Namespace) -> None:
                 break
 
         params["offset"] += len(molecules)
+        print(f"Fetched {len(chembl_ids)} molecule IDs so far...")
 
     print(f"Fetched {len(chembl_ids)} molecule IDs. Starting downloads...")
 
