@@ -82,7 +82,7 @@ def fetch_and_download_molecules(args: argparse.Namespace) -> None:
     base_url: str = "https://www.ebi.ac.uk/chembl/api/data/molecule"
     params: dict = {
         "format": "json",
-        "limit": 100,
+        "limit": 500,
         "offset": 0,
         "min_phase": args.max_phase
     }
@@ -113,6 +113,7 @@ def fetch_and_download_molecules(args: argparse.Namespace) -> None:
                 break
 
         params["offset"] += len(molecules)
+        print(f"Fetched {len(chembl_ids)} molecule IDs so far...")
 
     print(f"Fetched {len(chembl_ids)} molecule IDs. Starting downloads...")
 
