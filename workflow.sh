@@ -5,12 +5,12 @@
 set -e
 
 # Configuration
-TARGETS="4yvg"                              # Comma-separated list of target PDB-IDs
-LIGANDS_FOLDER="./ligands"                  # Directory for ligand files
-TARGETS_FOLDER="./targets"                  # Directory for target files
+TARGETS="4yvg"                                        # Comma-separated list of target PDB-IDs
+LIGANDS_FOLDER="./molecule_structures/original"       # Directory for ligand files
+TARGETS_FOLDER="./Structure/TrmD"                     # Directory for target files
 DOCKED_STRUCTURES="$OUTPUT_DIR/ligand_target_pairs.txt"
-CONFIG_FILE="./params/unidock_config.json"  # Configuration file for docking
-OUTPUT_DIR="./output"                       # Directory for output files
+CONFIG_FILE="./screening/params/unidock_config.json"  # Configuration file for docking
+OUTPUT_DIR="./output"                                 # Directory for output files
 
 # Create output directory
 mkdir -p "$OUTPUT_DIR"
@@ -22,7 +22,7 @@ echo "Starting MeetEU project workflow..."
 # Step 1: Fetch ligands
 # IF NOT ALREADY FETCHED
 echo "Step 1: Fetching ligands from ChEMBL database..."
-python3 download_molecules.py [OPTIONS]
+python3 download_molecules.py --max_phase 1 --folder_name "molecule_structures"
 echo "Ligands fetched successfully inside '$LIGANDS_FOLDER'."
 
 
