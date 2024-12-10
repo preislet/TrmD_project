@@ -28,6 +28,8 @@ parser.add_argument("--min_np_likeness", type=float, help="Minimum natural produ
 parser.add_argument("--max_np_likeness", type=float, help="Maximum natural product likeness score.")
 parser.add_argument("--molecular_species", type=str, help="Filter by molecular species (e.g., NEUTRAL, ACID, BASE).")
 parser.add_argument("--preprocess", action="store_true", default=False, help="Preprocess molecules using RDKit.")
+parser.add_argument("--max_attempts", type=int, default=5, help="Maximum number of download attempts per molecule.")
+parser.add_argument("--verbose", action="store_true", default=False, help="Print verbose output.")
 
 def create_folders(base_folder: str) -> Dict[str, str]:
     """Creates folders for storing original and preprocessed files."""
@@ -35,19 +37,23 @@ def create_folders(base_folder: str) -> Dict[str, str]:
     preprocessed_folder = os.path.join(base_folder, "preprocessed")
     os.makedirs(original_folder, exist_ok=True)
     os.makedirs(preprocessed_folder, exist_ok=True)
-    print(f"Created folders: {original_folder}, {preprocessed_folder}")
-    return {"original": original_folder, "preprocessed": preprocessed_folder}
+    # log file
+    log_file = os.path.join(base_folder, "download_log.txt")
+
+    if args.verbose: print(f"Created folders: {original_folder}, {preprocessed_folder}")
+    return {"original": original_folder, "preprocessed": preprocessed_folder, "log": log_file}
 
 def preprocess_molecule(file_path: str, output_folder: str) -> None:
     """Preprocess a molecule file using RDKit."""
     mol = Chem.MolFromMolFile(file_path)
     if mol:
+        # Embed the molecule (generate 3D coordinates)
         AllChem.EmbedMolecule(mol)
         processed_path = os.path.join(output_folder, os.path.basename(file_path).replace(".mol", "_preprocessed.mol").replace(".sdf", "_preprocessed.sdf"))
         Chem.MolToMolFile(mol, processed_path)
-        print(f"Preprocessed and saved to: {processed_path}")
+        if args.verbose: print(f"Preprocessed and saved to: {processed_path}")
 
-def download_structure(chembl_id: str, folders: Dict[str, str], output_format: str, preprocess: bool) -> None:
+def download_structure(chembl_id: str, folders: Dict[str, str], output_format: str, preprocess: bool, retries:int = 3) -> None:
     """Downloads a molecule structure in the specified format."""
     original_folder = folders["original"]
     preprocessed_folder = folders["preprocessed"]
@@ -55,25 +61,33 @@ def download_structure(chembl_id: str, folders: Dict[str, str], output_format: s
     file_path = os.path.join(original_folder, f"{chembl_id}.{output_format}")
     
     if os.path.exists(file_path):
-        print(f"Skipping already downloaded: {chembl_id}")
+        if args.verbose: print(f"Skipping already downloaded: {chembl_id}")
         return
-    
-    response = requests.get(structure_url)
-    if response.status_code == 200:
-        with open(file_path, "wb") as file:
-            file.write(response.content)
-        print(f"Downloaded: {chembl_id}.{output_format}")
-        if preprocess and output_format in ["mol", "sdf"]:
-            preprocess_molecule(file_path, preprocessed_folder)
-    else:
-        print(f"Failed to download {chembl_id}: {response.status_code}")
+
+    for _ in range(retries):
+        response = requests.get(structure_url)
+        if response.status_code == 200:
+            with open(file_path, "wb") as file:
+                file.write(response.content)
+            if args.verbose: print(f"Downloaded: {chembl_id}.{output_format}")
+            if preprocess and output_format in ["mol", "sdf"]:
+                preprocess_molecule(file_path, preprocessed_folder)
+            return
+        else:
+            if args.verbose:
+                print(f"Failed to download {chembl_id}. Status Code: {response.status_code}")
+                print(f"Retrying download for {chembl_id}...")
+
+    if args.verbose: print(f"Failed to download {chembl_id} after {retries} retries.")
+    with open(folders["log"], "a") as log:
+        log.write(f"Failed to download: {chembl_id} | https://www.ebi.ac.uk/chembl/api/data/molecule/{chembl_id}\n")
 
 def fetch_and_download_molecules(args: argparse.Namespace) -> None:
     """Fetches molecule IDs, applies filters, downloads molecules, and saves metadata."""
     base_url: str = "https://www.ebi.ac.uk/chembl/api/data/molecule"
     params: dict = {
         "format": "json",
-        "limit": 100,
+        "limit": 500,
         "offset": 0,
         "max_phase": args.max_phase
     }
@@ -87,7 +101,9 @@ def fetch_and_download_molecules(args: argparse.Namespace) -> None:
     while downloaded_count < args.max_results:
         response = requests.get(base_url, params=params)
         if response.status_code != 200:
-            print(f"Failed to fetch molecule data: {response.status_code}")
+            if args.verbose: print(f"Failed to fetch molecule data: {response.status_code}")
+            with open(folders["log"], "a") as log:
+                log.write(f"Failed to fetch molecule data: {response.status_code}\n")
             break
 
         data = response.json()
@@ -144,12 +160,12 @@ def fetch_and_download_molecules(args: argparse.Namespace) -> None:
 
         params["offset"] += len(molecules)
 
-    print(f"Fetched {len(chembl_ids)} molecule IDs. Starting downloads...")
+    if args.verbose: print(f"Fetched {len(chembl_ids)} molecule IDs. Starting downloads...")
 
     # Save metadata to CSV
     metadata_file = os.path.join(args.folder_name, "molecule_metadata.csv")
     pd.DataFrame(metadata).to_csv(metadata_file, index=False)
-    print(f"Metadata saved to {metadata_file}")
+    if args.verbose: print(f"Metadata saved to {metadata_file}")
 
     # Download structures in parallel
     with ThreadPoolExecutor(max_workers=args.processors) as executor:
@@ -158,7 +174,7 @@ def fetch_and_download_molecules(args: argparse.Namespace) -> None:
             chembl_ids
         )
 
-    print(f"Downloaded {len(chembl_ids)} molecules.")
+    if args.verbose: print(f"Downloaded {len(chembl_ids)} molecules.")
 
 if __name__ == "__main__":
     args = parser.parse_args()

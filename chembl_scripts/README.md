@@ -47,6 +47,8 @@ python3 download_molecules.py [OPTIONS]
 | `--folder_name`  | `str`   | `molecule_structures`| Base folder to store downloaded and preprocessed files.     |
 | `--max_phase`    | `int`   | `4`                  | Maximum approval phase (e.g., 4 for FDA-approved drugs).    |
 | `--preprocess`   | `bool`  | `False`              | Enable preprocessing of molecules using RDKit.              |
+| `--verbose`      | `bool`  | `False`              | Activate verbose mode                                       |
+
 
 ## Folder Structure
 
@@ -123,6 +125,7 @@ python3 download_molecules_advanced_filter.py [OPTIONS]
 | `--max_np_likeness`        | `float` | `None`                | Maximum natural product likeness score.                      |
 | `--molecular_species`      | `str`   | `None`                | Filter by molecular species (`NEUTRAL`, `ACID`, `BASE`).      |
 | `--preprocess`             | `bool`  | `False`               | Enable preprocessing of molecules using RDKit.               |
+| `--verbose`                | `bool`  | `False`               | Activate verbose mode                                       |
 
 ### Example
 
