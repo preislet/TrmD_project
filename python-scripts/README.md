@@ -12,11 +12,8 @@ Generates 3D conformers for a given SMILES string.
 **Outputs**:  
 A directory containing the generated conformers in PDB format.
 
-**Usage**:
-```bash
-python generate_conformers.py
 
-### `prepare_target.py`
+### `prepare_targets.py`
 
 **Purpose**:  
 Prepares a target (protein) for docking by:
@@ -31,5 +28,7 @@ A cleaned-up PDB file ready for docking.
 
 **Usage**:
 ```bash
-python prepare_target.py
+python generate_conformers.py
+python prepare_targets.py
+
 
