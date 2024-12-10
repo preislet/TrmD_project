@@ -1,0 +1,35 @@
+## Scripts
+
+### `generate_conformers.py`
+
+**Purpose**:  
+Generates 3D conformers for a given SMILES string.
+
+**Inputs**:
+- SMILES representation of a molecule.
+- Number of conformers to generate.
+
+**Outputs**:  
+A directory containing the generated conformers in PDB format.
+
+**Usage**:
+```bash
+python generate_conformers.py
+
+### `prepare_target.py`
+
+**Purpose**:  
+Prepares a target (protein) for docking by:
+- Removing water molecules.
+- Adding missing hydrogen atoms.
+
+**Inputs**:
+- PDB file of the target protein.
+
+**Outputs**:  
+A cleaned-up PDB file ready for docking.
+
+**Usage**:
+```bash
+python prepare_target.py
+
