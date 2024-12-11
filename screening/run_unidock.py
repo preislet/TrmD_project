@@ -11,47 +11,47 @@ import csv
 parser = argparse.ArgumentParser(description="Uni-Dock Docking Workflow with Batch Processing")
 
 # Input arguments
-parser.add_argument("--receptor", required=True, help="Rigid part of the receptor (PDBQT or PDB)")
-parser.add_argument("--flex", help="Flexible side chains, if any (PDBQT or PDB)")
-parser.add_argument("--ligand", help="Single ligand (PDBQT)")
-parser.add_argument("--ligand_index", help="File containing paths to ligands (PDBQT or SDF)")
-parser.add_argument("--batch", help="Batch ligand (PDBQT)")
-parser.add_argument("--gpu_batch", help="GPU batch ligand (PDBQT or SDF)")
-parser.add_argument("--scoring", choices=["ad4", "vina", "vinardo"], default="vina", help="Scoring function")
+parser.add_argument("--receptor", "-r", required=True, help="Rigid part of the receptor (PDBQT or PDB)")
+parser.add_argument("--flex", "-f", help="Flexible side chains, if any (PDBQT or PDB)")
+parser.add_argument("--ligand", "-l", help="Single ligand (PDBQT)")
+parser.add_argument("--ligand_index", "-li", help="File containing paths to ligands (PDBQT or SDF)")
+#parser.add_argument("--batch", "-b", help="Batch ligands (PDBQT files)", nargs='+')
+#parser.add_argument("--gpu_batch", "-gb", help="GPU batch ligands (PDBQT or SDF files)", nargs='+')
+parser.add_argument("--scoring", "-s", choices=["ad4", "vina", "vinardo"], default="vina", help="Scoring function")
 
 # Search space arguments
 parser.add_argument("--maps", help="Affinity maps for AD4.2 or vina scoring function")
-parser.add_argument("--center_x", type=float, required=True, help="X coordinate of the center (Angstrom)")
-parser.add_argument("--center_y", type=float, required=True, help="Y coordinate of the center (Angstrom)")
-parser.add_argument("--center_z", type=float, required=True, help="Z coordinate of the center (Angstrom)")
-parser.add_argument("--size_x", type=float, default=22.0, help="Size in X dimension (Angstrom)")
-parser.add_argument("--size_y", type=float, default=22.0, help="Size in Y dimension (Angstrom)")
-parser.add_argument("--size_z", type=float, default=22.0, help="Size in Z dimension (Angstrom)")
+parser.add_argument("--center_x", "-cx", type=float, required=True, help="X coordinate of the center (Angstrom)")
+parser.add_argument("--center_y", "-cy", type=float, required=True, help="Y coordinate of the center (Angstrom)")
+parser.add_argument("--center_z", "-cz", type=float, required=True, help="Z coordinate of the center (Angstrom)")
+parser.add_argument("--size_x", "-sx", type=float, default=22.0, help="Size in X dimension (Angstrom)")
+parser.add_argument("--size_y", "-sy", type=float, default=22.0, help="Size in Y dimension (Angstrom)")
+parser.add_argument("--size_z", "-sz", type=float, default=22.0, help="Size in Z dimension (Angstrom)")
 parser.add_argument("--autobox", action="store_true", help="Set map dimensions based on input ligand(s)")
 
 # Output arguments
-parser.add_argument("--out", help="Output models (PDBQT)")
-parser.add_argument("--dir", default="./result", help="Output directory for batch mode")
-parser.add_argument("--write_maps", help="Output filename (directory + prefix name) for maps")
-parser.add_argument("--csv_output", default="docking_results.csv", help="Name of the output CSV file") # NEW
+parser.add_argument("--out", "-o", help="Output models (PDBQT)")
+parser.add_argument("--dir", "-d", default="./result", help="Output directory for batch mode")
+parser.add_argument("--write_maps", "-wm", help="Output filename (directory + prefix name) for maps")
+parser.add_argument("--csv_output", "-csv", default="docking_results.csv", help="Name of the output CSV file") # NEW
 
 # Miscellaneous arguments
 parser.add_argument("--cpu", type=int, default=0, help="Number of CPUs to use")
-parser.add_argument("--seed", type=int, default=0, help="Explicit random seed")
-parser.add_argument("--exhaustiveness", type=int, default=8, help="Exhaustiveness of the global search")
-parser.add_argument("--max_evals", type=int, default=0, help="Number of evaluations in each MC run")
-parser.add_argument("--num_modes", type=int, default=9, help="Maximum number of binding modes to generate")
-parser.add_argument("--min_rmsd", type=float, default=1.0, help="Minimum RMSD between output poses")
-parser.add_argument("--energy_range", type=float, default=3.0, help="Maximum energy difference (kcal/mol)")
-parser.add_argument("--spacing", type=float, default=0.375, help="Grid spacing (Angstrom)")
-parser.add_argument("--verbosity", type=int, default=1, help="Verbosity (0=no output, 1=normal, 2=verbose)")
-parser.add_argument("--max_step", type=int, default=0, help="Maximum number of steps in each MC run")
-parser.add_argument("--refine_step", type=int, default=5, help="Number of steps in refinement")
-parser.add_argument("--max_gpu_memory", type=int, default=0, help="Maximum GPU memory to use (MB)")
-parser.add_argument("--search_mode", choices=["fast", "balance", "detail"], help="Search mode of Uni-Dock")
+parser.add_argument("--seed", type=int, default=42, help="Explicit random seed")
+parser.add_argument("--exhaustiveness", "-ex", type=int, default=8, help="Exhaustiveness of the global search")
+parser.add_argument("--max_evals", "-me", type=int, default=0, help="Number of evaluations in each MC run")
+parser.add_argument("--num_modes", "-nm", type=int, default=9, help="Maximum number of binding modes to generate")
+parser.add_argument("--min_rmsd", "-mr", type=float, default=1.0, help="Minimum RMSD between output poses")
+parser.add_argument("--energy_range", "-er", type=float, default=3.0, help="Maximum energy difference (kcal/mol)")
+parser.add_argument("--spacing", "-sp", type=float, default=0.375, help="Grid spacing (Angstrom)")
+parser.add_argument("--verbosity", "-v", type=int, default=1, help="Verbosity (0=no output, 1=normal, 2=verbose)")
+parser.add_argument("--max_step", "-ms", type=int, default=0, help="Maximum number of steps in each MC run")
+parser.add_argument("--refine_step", "-rs", type=int, default=5, help="Number of steps in refinement")
+parser.add_argument("--max_gpu_memory", "-mgm", type=int, default=0, help="Maximum GPU memory to use (MB)")
+parser.add_argument("--search_mode", "-sm", choices=["fast", "balance", "detail"], help="Search mode of Uni-Dock")
 
 # Configuration file
-parser.add_argument("--config", help="Path to a configuration file")
+parser.add_argument("--config", "-c", help="Path to a configuration file")
 
 # Help and information
 parser.add_argument("--version", action="store_true", help="Display program version")
