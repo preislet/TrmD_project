@@ -160,6 +160,7 @@ def main(args):
         raise FileNotFoundError("Ligand index file not found.")
     batch_generator = split_ligands(args.ligand_index, args.batch_size)
     for batch_number, ligands in enumerate(batch_generator, start=1):
+        print(f"***** BATCH {batch_number}... ({len(ligands)} ligands) *****")
         batch_file = write_ligand_file(ligands, batch_number)
         try:
             run_docking(batch_file, batch_number, args)
