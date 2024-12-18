@@ -6,6 +6,28 @@ This file will work as a log which will summarize team meetings
 - Midterm presentation 13.12.2024 10AM
 - Deadline 2: 24.12.2024
 
+
+## MeetEU (8.12.2024)
+- prepare our presentation (which molecules, where to dock, how and why)
+
+## MeetEU (2.12.2024)
+- suggested how our workflow could look
+- revalidation after screening (of the top rated molecules; SQM; ADR prediction?)
+- fill the form for 4EU+ trip to Milan
+
+## MeetEU (25.11.2024)
+- proS seems to replace the function of TrmD
+- the is not a homologous protein to TrmD which would replace the function
+- we should ideally target TrmD and proS at once (take a look at the alignment if there are possible regions to target)
+- paper showcase where they specifically mutated at the binding site but mutations completely outside of the pocket had effect as well (maybe it restricts dimerization or it causes the protein to fold badly)
+- two (known) possible functional analogues
+- idea to block dimerization and the binding of AdoMet at once
+
+## MeetEU (18.11.2024)
+- Tom has had a presentation on molecular docking algorithms
+- he suggested that a deep learning approach should be used and then after the ligand is fitted a physics-based approach should be used as well to introduce realistic conformation of the ligand in the pocket
+- for number of reasons UniDock seems to be the one to use out of physics-based methods and SurfDock and uniMolDock of deep learning ones
+
 ## MeetEU (11.11.2024)
 - Marian told us about a study which highlights the biological importance of methylations - after the knockout of methyl transferase gene, another protein replaced its function
 - Tom was assigned to have a presentation on different molecular docking techniques (algorithms)
