@@ -14,6 +14,7 @@ parser = argparse.ArgumentParser(description="Uni-Dock Docking Workflow with Bat
 parser.add_argument("--receptor", "-r", required=True, help="Rigid part of the receptor (PDBQT or PDB)")
 parser.add_argument("--flex", "-f", help="Flexible side chains, if any (PDBQT or PDB)")
 parser.add_argument("--ligand", "-l", help="Single ligand (PDBQT)")
+parser.add_argument("--ligand_dir", "-ld", help="Directory containing ligands (PDBQT or SDF)") # NEW
 parser.add_argument("--ligand_index", "-li", help="File containing paths to ligands (PDBQT or SDF)")
 #parser.add_argument("--batch", "-b", help="Batch ligands (PDBQT files)", nargs='+')
 #parser.add_argument("--gpu_batch", "-gb", help="GPU batch ligands (PDBQT or SDF files)", nargs='+')
@@ -57,13 +58,13 @@ parser.add_argument("--config", "-c", help="Path to a configuration file")
 parser.add_argument("--version", action="store_true", help="Display program version")
 
 # Batch processing
-parser.add_argument("--batch_size", "-bs", type=int, default=0, help="Number of ligands to process in each batch") # NEW
+parser.add_argument("--batch_size", "-bs", type=int, default=512, help="Number of ligands to process in each batch") # NEW
 
 
 def split_ligands(ligand_index, batch_size):
     """Split the ligand files into smaller batches."""
     with open(ligand_index, "r") as f:
-        ligands = f.read().splitlines()
+        ligands = f.read().split(" ")
     for i in range(0, len(ligands), batch_size):
         yield ligands[i:i + batch_size]
 
@@ -157,9 +158,9 @@ def extract_scores(result_dir, csv_output):
 def main(args):
     if not args.ligand_index or not os.path.exists(args.ligand_index):
         raise FileNotFoundError("Ligand index file not found.")
-    batch_size = args.batch_size or 1  # Default to processing one ligand per batch if not specified
-    batch_generator = split_ligands(args.ligand_index, batch_size)
+    batch_generator = split_ligands(args.ligand_index, args.batch_size)
     for batch_number, ligands in enumerate(batch_generator, start=1):
+        print(f"***** BATCH {batch_number}... ({len(ligands)} ligands) *****")
         batch_file = write_ligand_file(ligands, batch_number)
         try:
             run_docking(batch_file, batch_number, args)

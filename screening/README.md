@@ -8,11 +8,7 @@ This project provides a Python script for batch-processing ligand docking using 
 
 ### Uni-Dock Software
 
-Ensure that the Uni-Dock software is installed and available in your system's PATH.
-
-```bash
-# installation guide
-```
+Ensure that the Uni-Dock software is installed and available in your system's PATH or in the path of your container. You can follow the installation steps [here](https://github.com/dptech-corp/Uni-Dock/tree/main/unidock#installation) or you can use the Docker image provided in our repository. One thing to note is that you have to have sufficient NVIDIA drivers.
 
 ---
 
@@ -22,7 +18,7 @@ Run the script from the command line to perform docking operations and save the 
 
 ### Basic Command
 
-The basic command should include a receptor file, ligand file or file of paths to ligand files (on a single line, space separated like this: `./ligands/lig1.pdbqt ./ligands/lig2.pdbqt ...`) and the information about the location of where to dock.
+The basic command should include a receptor file, ligand file or a txt file of paths to ligand files (on a single line, space-separated like this: `./ligands/lig1.pdbqt ./ligands/lig2.pdbqt ...`) and the information about the location of where to dock.
 
 ```bash
 python3 run_unidock.py --receptor <target_file> --ligand|ligand_index <ligand_file|ligands.txt> \
@@ -31,7 +27,7 @@ python3 run_unidock.py --receptor <target_file> --ligand|ligand_index <ligand_fi
 
 ```bash
 python3 run_unidock.py --receptor <receptor.pdbqt> \
-     --ligand_index <lig1.pdbqt> <lig2.pdbqt> ... <ligN.pdbqt> \
+     --ligand_index ligands.txt \
      --search_mode balance \
      --scoring vina \
      -cx <center_x> -cy <center_y> -cz <center_z> \
