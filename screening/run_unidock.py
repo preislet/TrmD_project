@@ -140,19 +140,51 @@ def run_docking(batch_file, batch_number, args):
 
 
 def extract_scores(result_dir, csv_output):
-    """Extract scores from the result files and write them to a CSV."""
+    """
+    Extract scores from PDBQT or SDF result files and write them to a CSV.
+
+    Parameters:
+        result_dir (str): Directory containing result files.
+        csv_output (str): Path to the output CSV file.
+    """
+    # Check file extension once (assumes either all PDBQT or all SDF files)
     result_files = glob.glob(f"{result_dir}/*.pdbqt")
+    file_type = "pdbqt"
+
+    if not result_files:
+        result_files = glob.glob(f"{result_dir}/*.sdf")
+        file_type = "sdf"
+
     with open(csv_output, "w", newline="") as csvfile:
         csvwriter = csv.writer(csvfile)
         csvwriter.writerow(["Ligand", "Score"])
-        for result_file in result_files:
-            with open(result_file, "r") as f:
-                for line in f:
-                    if line.startswith("REMARK VINA RESULT:"):
-                        score = float(line.split()[3])
-                        ligand_name = os.path.basename(result_file)
-                        csvwriter.writerow([ligand_name, score])
-                        break
+
+        if file_type == "pdbqt":
+            # Parse PDBQT files
+            for result_file in result_files:
+                with open(result_file, "r") as f:
+                    for line in f:
+                        if line.startswith("REMARK VINA RESULT:"):
+                            score = float(line.split()[3])
+                            ligand_name = os.path.basename(result_file)
+                            csvwriter.writerow([ligand_name, score])
+                            break
+
+        elif file_type == "sdf":
+            # Parse SDF files
+            for result_file in result_files:
+                ligand_name = os.path.basename(result_file)
+                with open(result_file, "r") as f:
+                    score = None
+                    capture = False
+                    for line in f:
+                        if "> <Uni-Dock RESULT>" in line:
+                            capture = True
+                        elif capture and "ENERGY=" in line:
+                            score = float(line.split("ENERGY=")[1].split()[0])
+                            break  # Stop after finding the first ENERGY value
+                if score is not None:
+                    csvwriter.writerow([ligand_name, score])
 
 
 def main(args):
@@ -160,7 +192,7 @@ def main(args):
         raise FileNotFoundError("Ligand index file not found.")
     batch_generator = split_ligands(args.ligand_index, args.batch_size)
     for batch_number, ligands in enumerate(batch_generator, start=1):
-        print(f"***** BATCH {batch_number}... ({len(ligands)} ligands) *****")
+        print(f"***** BATCH {batch_number + 1} (ligands {len(ligands)}) *****")
         batch_file = write_ligand_file(ligands, batch_number)
         try:
             run_docking(batch_file, batch_number, args)
