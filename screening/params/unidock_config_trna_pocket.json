@@ -1,0 +1,19 @@
+{
+    "receptor": "/Structure/TrmD/raw_4yvg.pdbqt",
+    "ligands": "molecule_structures/prepared/",
+    "savedir": "screening/results_dimer_pocket",
+    "center_x": 29.5,
+    "center_y": 9.4,
+    "center_z": 26.2,
+    "size_x": 20.0,
+    "size_y": 20.0,
+    "size_z": 20.0,
+    "scoring_function": "vinardo",
+    "exhaustiveness": 128,
+    "max_step": 20,
+    "num_modes": 3,
+    "refine_step": 3,
+    "topn": 100,
+    "workdir": "unidock_workdir",
+    "batch_size": 256
+}
