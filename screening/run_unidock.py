@@ -14,7 +14,7 @@ parser = argparse.ArgumentParser(description="Uni-Dock Docking Workflow with Bat
 parser.add_argument("--receptor", "-r", required=True, help="Rigid part of the receptor (PDBQT or PDB)")
 parser.add_argument("--flex", "-f", help="Flexible side chains, if any (PDBQT or PDB)")
 parser.add_argument("--ligand", "-l", help="Single ligand (PDBQT)")
-parser.add_argument("--ligand_dir", "-ld", help="Directory containing ligands (PDBQT or SDF)") # NEW
+parser.add_argument("--ligand_dir", "-ld", default=None, help="Directory containing ligands (PDBQT or SDF)") # NEW
 parser.add_argument("--ligand_index", "-li", help="File containing paths to ligands (PDBQT or SDF)")
 #parser.add_argument("--batch", "-b", help="Batch ligands (PDBQT files)", nargs='+')
 #parser.add_argument("--gpu_batch", "-gb", help="GPU batch ligands (PDBQT or SDF files)", nargs='+')
@@ -65,6 +65,8 @@ def split_ligands(ligand_index, batch_size):
     """Split the ligand files into smaller batches."""
     with open(ligand_index, "r") as f:
         ligands = f.read().split(" ")
+    if len(ligands) == 1:
+        ligands = ligands[0].split("\n")
     for i in range(0, len(ligands), batch_size):
         yield ligands[i:i + batch_size]
 
@@ -189,13 +191,26 @@ def extract_scores(result_dir, csv_output):
 
 def main(args):
     if not args.ligand_index or not os.path.exists(args.ligand_index):
-        raise FileNotFoundError("Ligand index file not found.")
+        raise FileNotFoundError("Ligands not found.")
+    if args.ligand_dir != None:
+        args.ligand_index = os.path.join(args.ligand_dir, "ligand_index_tmp.txt")
+        with open(args.ligand_index, "w") as f:
+            for ligand in glob.glob(f"{args.ligand_dir}/*.pdbqt") + glob.glob(f"{args.ligand_dir}/*.sdf"):
+                f.write(f"{ligand} ")
+            # Remove trailing space
+            f.seek(f.tell() - 1)
+            f.truncate()
+
     batch_generator = split_ligands(args.ligand_index, args.batch_size)
+
     for batch_number, ligands in enumerate(batch_generator, start=1):
         print(f"***** BATCH {batch_number + 1} (ligands {len(ligands)}) *****")
         batch_file = write_ligand_file(ligands, batch_number)
         try:
             run_docking(batch_file, batch_number, args)
+        except Exception as e:
+            print(f"Error running batch {batch_number}: {e}")
+            continue
         finally:
             os.remove(batch_file)
     print("Extracting scores and generating CSV...")
