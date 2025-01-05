@@ -14,7 +14,7 @@ parser = argparse.ArgumentParser(description="Uni-Dock Docking Workflow with Bat
 parser.add_argument("--receptor", "-r", required=True, help="Rigid part of the receptor (PDBQT or PDB)")
 parser.add_argument("--flex", "-f", help="Flexible side chains, if any (PDBQT or PDB)")
 parser.add_argument("--ligand", "-l", help="Single ligand (PDBQT)")
-parser.add_argument("--ligand_dir", "-ld", help="Directory containing ligands (PDBQT or SDF)") # NEW
+parser.add_argument("--ligand_dir", "-ld", default=None, help="Directory containing ligands (PDBQT or SDF)") # NEW
 parser.add_argument("--ligand_index", "-li", help="File containing paths to ligands (PDBQT or SDF)")
 #parser.add_argument("--batch", "-b", help="Batch ligands (PDBQT files)", nargs='+')
 #parser.add_argument("--gpu_batch", "-gb", help="GPU batch ligands (PDBQT or SDF files)", nargs='+')
@@ -65,6 +65,8 @@ def split_ligands(ligand_index, batch_size):
     """Split the ligand files into smaller batches."""
     with open(ligand_index, "r") as f:
         ligands = f.read().split(" ")
+    if len(ligands) == 1:
+        ligands = ligands[0].split("\n")
     for i in range(0, len(ligands), batch_size):
         yield ligands[i:i + batch_size]
 
@@ -140,30 +142,75 @@ def run_docking(batch_file, batch_number, args):
 
 
 def extract_scores(result_dir, csv_output):
-    """Extract scores from the result files and write them to a CSV."""
+    """
+    Extract scores from PDBQT or SDF result files and write them to a CSV.
+
+    Parameters:
+        result_dir (str): Directory containing result files.
+        csv_output (str): Path to the output CSV file.
+    """
+    # Check file extension once (assumes either all PDBQT or all SDF files)
     result_files = glob.glob(f"{result_dir}/*.pdbqt")
+    file_type = "pdbqt"
+
+    if not result_files:
+        result_files = glob.glob(f"{result_dir}/*.sdf")
+        file_type = "sdf"
+
     with open(csv_output, "w", newline="") as csvfile:
         csvwriter = csv.writer(csvfile)
         csvwriter.writerow(["Ligand", "Score"])
-        for result_file in result_files:
-            with open(result_file, "r") as f:
-                for line in f:
-                    if line.startswith("REMARK VINA RESULT:"):
-                        score = float(line.split()[3])
-                        ligand_name = os.path.basename(result_file)
-                        csvwriter.writerow([ligand_name, score])
-                        break
+
+        if file_type == "pdbqt":
+            # Parse PDBQT files
+            for result_file in result_files:
+                with open(result_file, "r") as f:
+                    for line in f:
+                        if line.startswith("REMARK VINA RESULT:"):
+                            score = float(line.split()[3])
+                            ligand_name = os.path.basename(result_file)
+                            csvwriter.writerow([ligand_name, score])
+                            break
+
+        elif file_type == "sdf":
+            # Parse SDF files
+            for result_file in result_files:
+                ligand_name = os.path.basename(result_file)
+                with open(result_file, "r") as f:
+                    score = None
+                    capture = False
+                    for line in f:
+                        if "> <Uni-Dock RESULT>" in line:
+                            capture = True
+                        elif capture and "ENERGY=" in line:
+                            score = float(line.split("ENERGY=")[1].split()[0])
+                            break  # Stop after finding the first ENERGY value
+                if score is not None:
+                    csvwriter.writerow([ligand_name, score])
 
 
 def main(args):
     if not args.ligand_index or not os.path.exists(args.ligand_index):
-        raise FileNotFoundError("Ligand index file not found.")
+        raise FileNotFoundError("Ligands not found.")
+    if args.ligand_dir != None:
+        args.ligand_index = os.path.join(args.ligand_dir, "ligand_index_tmp.txt")
+        with open(args.ligand_index, "w") as f:
+            for ligand in glob.glob(f"{args.ligand_dir}/*.pdbqt") + glob.glob(f"{args.ligand_dir}/*.sdf"):
+                f.write(f"{ligand} ")
+            # Remove trailing space
+            f.seek(f.tell() - 1)
+            f.truncate()
+
     batch_generator = split_ligands(args.ligand_index, args.batch_size)
+
     for batch_number, ligands in enumerate(batch_generator, start=1):
-        print(f"***** BATCH {batch_number}... ({len(ligands)} ligands) *****")
+        print(f"***** BATCH {batch_number + 1} (ligands {len(ligands)}) *****")
         batch_file = write_ligand_file(ligands, batch_number)
         try:
             run_docking(batch_file, batch_number, args)
+        except Exception as e:
+            print(f"Error running batch {batch_number}: {e}")
+            continue
         finally:
             os.remove(batch_file)
     print("Extracting scores and generating CSV...")
