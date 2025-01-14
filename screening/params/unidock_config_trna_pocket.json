@@ -1,7 +1,7 @@
 {
     "receptor": "/Structure/TrmD/raw_4yvg.pdbqt",
     "ligands": "molecule_structures/prepared/",
-    "savedir": "screening/results_dimer_pocket",
+    "savedir": "screening/results_trna_pocket",
     "center_x": 29.5,
     "center_y": 9.4,
     "center_z": 26.2,
