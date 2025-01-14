@@ -2,8 +2,12 @@
 
 # Define the remote path, local destination, and number of top ligands to download
 REMOTE_PATH="metacentrum:/storage/praha1/home/tobiasma/meet-eu/trmd-project"
-LOCAL_PATH="./adomet_pocket"
-TOP_N=6  # Number of top ligands to process
+POCKET="dimer"
+
+LOCAL_PATH="./${POCKET}_pocket"
+RESULTS_DIR_NAME="${POCKET}_pocket_result"
+
+TOP_N=20  # Number of top ligands to process
 
 # Temporary file to store top ligand names
 TOP_LIG_NAMES=$(mktemp)
@@ -29,7 +33,7 @@ transfer_files() {
     mkdir -p "${molecule_dir}/out"
 
     # Define remote paths for different files
-    scp "${REMOTE_PATH}/result/${molecule}[!0-9]*.sdf" "${molecule_dir}/out/" 2>/dev/null
+    scp "${REMOTE_PATH}/${RESULTS_DIR_NAME}/${molecule}[!0-9]*.sdf" "${molecule_dir}/out/" 2>/dev/null
     scp "${REMOTE_PATH}/molecule_structures/original/${molecule}.sdf" "${molecule_dir}/" 2>/dev/null
     scp "${REMOTE_PATH}/molecule_structures/processed_single_components/${molecule}[!0-9]*.sdf" "${molecule_dir}/" 2>/dev/null
     scp "${REMOTE_PATH}/molecule_structures/preprocessed/${molecule}[!0-9]*.sdf" "${molecule_dir}/" 2>/dev/null
