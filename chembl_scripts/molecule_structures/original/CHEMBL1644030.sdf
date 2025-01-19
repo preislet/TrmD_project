@@ -1,0 +1,13 @@
+
+     RDKit          2D
+
+  2  0  0  0  0  0  0  0  0  0999 V2000
+    0.6125   -0.0542    0.0000 K   0  0  0  0  0 15  0  0  0  0  0  0
+   -0.8208   -0.0542    0.0000 Br  0  0  0  0  0  0  0  0  0  0  0  0
+M  CHG  2   1   1   2  -1
+M  END
+> <chembl_id>
+CHEMBL1644030
+
+> <chembl_pref_name>
+POTASSIUM BROMIDE

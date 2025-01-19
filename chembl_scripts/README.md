@@ -7,7 +7,7 @@ This project provides a Python script for downloading molecules from the ChEMBL 
 ## Features
 
 - **Download Molecules**: Fetch and save molecules in formats such as `sdf`, `mol`, or `smiles`.
-- **Approval Phase Filtering**: Filter molecules based on `min_phase` (e.g., FDA-approved drugs).
+- **Approval Phase Filtering**: Filter molecules based on `max_phase` (e.g., FDA-approved drugs).
 - **Preprocessing**: Optionally preprocess molecules using RDKit to generate conformers.
 - **Parallel Downloads**: Speed up downloading by leveraging multithreading.
 - **Organized Output**: Automatically create separate folders for original and preprocessed molecules.
