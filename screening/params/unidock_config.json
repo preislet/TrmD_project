@@ -1,0 +1,19 @@
+{
+    "receptor": "path/to/receptor.pdbqt",
+    "ligands": "path/to/ligands.sdf",
+    "savedir": "unidock_results",
+    "center_x": 0.0,
+    "center_y": 0.0,
+    "center_z": 0.0,
+    "size_x": 22.5,
+    "size_y": 22.5,
+    "size_z": 22.5,
+    "scoring_function": "vina",
+    "exhaustiveness": 128,
+    "max_step": 20,
+    "num_modes": 3,
+    "refine_step": 3,
+    "topn": 100,
+    "workdir": "unidock_workdir",
+    "batch_size": 20
+}
