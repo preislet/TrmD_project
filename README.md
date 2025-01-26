@@ -1,5 +1,7 @@
 # TrmD Inhibitor Discovery Project
 
+![TrmD with docked molecules in 3 identified sites](Info/trmd_protein_with_docked_ligands)
+
 ## Team
 - [Anna Gregušová](https://github.com/AnnaGregusova)
 - [Aneta Tranová](https://github.com/anetatranova)
