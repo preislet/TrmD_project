@@ -62,16 +62,5 @@ EvoFLOPA is a novel evolutionary algorithm designed to optimize lead molecules f
 *   **Validation:** Top-ranked molecules are rescored using RTMScore, a deep learning-based scoring function, for improved accuracy and generalization.
 *   **ADMET Prediction:** Includes ADMET (Absorption, Distribution, Metabolism, Excretion, and Toxicity) predictions, specifically DILI (Drug-Induced Liver Injury), to assess potential drug-like properties and toxicities.
 
-#### Workflow:
-
-1. **Initialization:** Starts with a set of known TrmD inhibitors as initial "LEAD" molecules.
-2. **Mutation:** Introduces mutations into the SELFIES strings of parent molecules.
-3. **Breeding:** Combines genetic material from parent molecules to create offspring.
-4. **Docking:** Docks generated molecules into the AdoMet binding site using UniDock.
-5. **Scoring:** Evaluates molecules based on the multi-objective loss function.
-6. **Selection:** Selects the top-ranking molecules and probabilistically selects molecules for the next generation based on their loss scores.
-7. **Iteration:** Repeats steps 2-6 for a defined number of iterations.
-8. **Validation and ADMET Prediction:** Rescores top molecules with RTMScore and performs ADMET predictions.
-
 ### Documentation 
 Full documentation can be found in the `Info` folder.
