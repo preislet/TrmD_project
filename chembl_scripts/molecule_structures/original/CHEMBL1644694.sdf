@@ -1,0 +1,13 @@
+
+     RDKit          2D
+
+  2  0  0  0  0  0  0  0  0  0999 V2000
+   -0.9625   -0.0792    0.0000 Na  0  0  0  0  0 15  0  0  0  0  0  0
+    0.4667   -0.0292    0.0000 Br  0  0  0  0  0  0  0  0  0  0  0  0
+M  CHG  2   1   1   2  -1
+M  END
+> <chembl_id>
+CHEMBL1644694
+
+> <chembl_pref_name>
+SODIUM BROMIDE
