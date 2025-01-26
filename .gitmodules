@@ -1,0 +1,3 @@
+[submodule "EvoFLOPA"]
+	path = EvoFLOPA
+	url = https://github.com/Desperadus/EvoFLOPA
