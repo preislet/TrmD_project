@@ -1,5 +1,4 @@
 # TrmD Inhibitor Discovery Project
-Meet-EU 2024
 
 ## Team
 - [Anna Gregušová](https://github.com/AnnaGregusova)
@@ -26,17 +25,17 @@ This method aimed to establish a benchmark for TrmD inhibitor discovery using kn
 #### Workflow:
 
 1. **Data Preparation:**
-    *   **FDA-Approved Molecules:** A library of FDA-approved molecules was obtained and prepared using RDKit. The preparation involved sanitization, protonation, charge assignment (using Gasteiger charges), and selecting the largest molecular component to overcome issues with multi-component structures.
+    *   **FDA-Approved Molecules:** A library of FDA-approved molecules was obtained and prepared using [RDKit](https://www.rdkit.org/). The preparation involved sanitization, protonation, charge assignment (using Gasteiger charges), and selecting the largest molecular component to overcome issues with multi-component structures.
     *   **TrmD Protein:** The crystal structure of TrmD from *Haemophilus influenzae* (PDB ID: 4YVG) was used as the receptor. The protein was prepared by removing water molecules and adding hydrogen atoms.
 
 2. **Identification of Docking Targets:**
-    *   Three potential binding sites on TrmD were identified using P2Rank:
+    *   Three potential binding sites on TrmD were identified using [P2Rank](https://prankweb.cz/):
         *   **AdoMet Pocket:** The binding site for the cofactor S-adenosylmethionine (SAM).
         *   **tRNA Binding Site:** The region where TrmD interacts with its tRNA substrate.
         *   **Dimerization Site:** The interface between the two TrmD monomers, potentially offering allosteric inhibition opportunities.
 
 3. **Molecular Docking:**
-    *   Docking simulations were performed using UniDock, a GPU-accelerated docking program.
+    *   Docking simulations were performed using [UniDock](https://github.com/dptech-corp/Uni-Dock), a GPU-accelerated docking program.
     *   The Vinardo scoring function was used to estimate binding affinity.
 
 4. **Benchmarking:**
